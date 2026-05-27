@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.npm-cache/
+.vite/
+.edge-headless*/
+.edge-profile*/
+.visual-check/
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts

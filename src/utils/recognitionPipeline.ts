@@ -27,6 +27,11 @@ function sourceTypeFor(input: RecognitionFileInput): SourceType {
   return '文件识别';
 }
 
+function aiImageSummary(input: RecognitionFileInput) {
+  const kind = input.requestedType === '问题' ? '问题照片' : input.requestedType === '费用' ? '票据截图' : '资料截图';
+  return `AI识图已读取${kind}「${input.fileName}」，先生成可编辑草稿；请补充或修正金额、责任人、时间等关键字段。`;
+}
+
 export async function recognizeImportedFile(input: RecognitionFileInput): Promise<RecognitionTask[]> {
   if (isMarkdownFile(input)) {
     const sourceText = input.textContent?.trim();
@@ -46,9 +51,15 @@ export async function recognizeImportedFile(input: RecognitionFileInput): Promis
   }
 
   const task = createMockRecognitionTask(input.requestedType, input.fileName);
+  const summary = input.mimeType?.startsWith('image/') ? aiImageSummary(input) : undefined;
   return [{
     ...task,
     sourceName: input.fileName,
     sourceType: sourceTypeFor(input),
+    sourceText: summary,
+    candidate: {
+      ...task.candidate,
+      ...(summary ? { aiSummary: summary } : {}),
+    },
   }];
 }

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   addReminder,
+  addIssueFollowUp,
+  addIssuePhoto,
   deleteExpense,
   deletePromise,
   deleteReminder,
@@ -13,6 +15,7 @@ import {
   upsertExpense,
   upsertPromise,
   upsertReminder,
+  updateIssueReminder,
   toggleChecklistItem,
   setPrivacyMode,
   updateRecognitionTaskCandidate,
@@ -132,6 +135,28 @@ describe('CarWise app state', () => {
     expect(issue?.owner).toBe('交付人员');
     expect(issue?.expectedDate).toBe('');
     expect(issue?.resolution).toContain('处理方式');
+  });
+
+  it('keeps issue photos, follow-up notes, and next reminder date with the issue', () => {
+    const state = createInitialState();
+    const target = state.checklistItems.find((item) => item.groupId === 'exterior');
+    expect(target).toBeTruthy();
+
+    const withIssue = createIssueFromChecklist(state, target!.id);
+    const issue = withIssue.issues[0];
+    const withPhoto = addIssuePhoto(withIssue, issue.id, {
+      name: '轮毂照片.jpg',
+      dataUrl: 'data:image/jpeg;base64,abc',
+    });
+    const withFollowUp = addIssueFollowUp(withPhoto, issue.id, '已和交付人员确认，等待处理方案。');
+    const withReminder = updateIssueReminder(withFollowUp, issue.id, '2026-05-30');
+    const updatedIssue = withReminder.issues.find((item) => item.id === issue.id);
+
+    expect(updatedIssue?.photos).toHaveLength(1);
+    expect(updatedIssue?.photos?.[0].name).toBe('轮毂照片.jpg');
+    expect(updatedIssue?.followUps).toHaveLength(1);
+    expect(updatedIssue?.followUps?.[0].content).toContain('等待处理方案');
+    expect(updatedIssue?.nextReminderDate).toBe('2026-05-30');
   });
 
   it('persists changes in local storage', () => {

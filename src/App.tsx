@@ -5,6 +5,7 @@ import { EditSheet, type EditableRecord, type EditKind } from './components/Edit
 import { ArchivePage } from './pages/ArchivePage';
 import { DeliveryPage } from './pages/DeliveryPage';
 import { HomePage } from './pages/HomePage';
+import { HandoverPage } from './pages/HandoverPage';
 import { IssuePage } from './pages/IssuePage';
 import { PromisePage } from './pages/PromisePage';
 import { PurchasePage } from './pages/PurchasePage';
@@ -13,6 +14,8 @@ import { UsagePage } from './pages/UsagePage';
 import type { IssueStatus, PromiseStatus, RecognitionType } from './model/types';
 import {
   addRecognitionTask,
+  addIssueFollowUp,
+  addIssuePhoto,
   addReminder,
   confirmRecognitionTask,
   createInitialState,
@@ -39,9 +42,9 @@ import {
 import { extractTextFromImageFile } from './utils/browserOcr';
 import { recognizeImportedFile } from './utils/recognitionPipeline';
 
-export type Page = 'home' | 'purchase' | 'promises' | 'delivery' | 'issue' | 'usage' | 'archive' | 'recognition';
+export type Page = 'home' | 'purchase' | 'promises' | 'delivery' | 'handover' | 'issue' | 'usage' | 'archive' | 'recognition';
 
-const pages: Page[] = ['home', 'purchase', 'promises', 'delivery', 'issue', 'usage', 'archive', 'recognition'];
+const pages: Page[] = ['home', 'purchase', 'promises', 'delivery', 'handover', 'issue', 'usage', 'archive', 'recognition'];
 
 function getInitialPage(): Page {
   const requestedPage = new URLSearchParams(window.location.search).get('page');
@@ -142,8 +145,6 @@ export default function App() {
           <HomePage
             state={state}
             onNavigate={setPage}
-            onUpload={handleUpload}
-            onMarkdownImport={handleMarkdownImport}
             onPrivacyModeChange={(privacyMode) => setState((current) => setPrivacyMode(current, privacyMode))}
           />
         )}
@@ -165,6 +166,8 @@ export default function App() {
             onAdd={() => setEditor({ kind: 'promise' })}
             onEdit={(promise) => setEditor({ kind: 'promise', record: promise })}
             onDelete={(id) => setState((current) => deletePromise(current, id))}
+            onUpload={handleUpload}
+            onMarkdownImport={handleMarkdownImport}
             onPrivacyModeChange={(privacyMode) => setState((current) => setPrivacyMode(current, privacyMode))}
           />
         )}
@@ -173,8 +176,12 @@ export default function App() {
             state={state}
             onToggle={(id) => setState((current) => toggleChecklistItem(current, id))}
             onCreateIssue={handleCreateIssue}
+            onNavigate={setPage}
+            onUpload={handleUpload}
+            onMarkdownImport={handleMarkdownImport}
           />
         )}
+        {page === 'handover' && <HandoverPage state={state} onNavigate={setPage} />}
         {page === 'issue' && (
           <IssuePage
             state={state}
@@ -184,6 +191,8 @@ export default function App() {
             onAdd={() => setEditor({ kind: 'issue' })}
             onEdit={(issue) => setEditor({ kind: 'issue', record: issue })}
             onDelete={(id) => setState((current) => deleteIssue(current, id))}
+            onAddPhoto={(id, photo) => setState((current) => addIssuePhoto(current, id, photo))}
+            onAddFollowUp={(id, content) => setState((current) => addIssueFollowUp(current, id, content))}
           />
         )}
         {page === 'usage' && (

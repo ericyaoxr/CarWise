@@ -118,6 +118,9 @@ function normalizeState(parsed: Partial<AppState>): AppState {
     issues: (parsed.issues ?? initial.issues).map((item) => ({
       ...item,
       issueType: item.issueType ?? '其他',
+      nextReminderDate: item.nextReminderDate ?? '',
+      photos: item.photos ?? [],
+      followUps: item.followUps ?? [],
     })),
     expenses: parsed.expenses ?? initial.expenses,
   };
@@ -261,6 +264,9 @@ export function confirmRecognitionTask(state: AppState, taskId: string): AppStat
       owner: typeof candidate.owner === 'string' ? candidate.owner : undefined,
       resolution: typeof candidate.resolution === 'string' ? candidate.resolution : undefined,
       expectedDate: typeof candidate.expectedDate === 'string' ? candidate.expectedDate : '',
+      nextReminderDate: typeof candidate.nextReminderDate === 'string' ? candidate.nextReminderDate : '',
+      photos: [],
+      followUps: [],
       status: (candidate.status as IssueStatus) ?? '待处理',
       sourceType: task.sourceType,
       sourceTaskId: task.id,
@@ -364,6 +370,9 @@ export function createIssueFromChecklist(state: AppState, itemId: string): AppSt
     owner: '交付人员',
     resolution: '交付前确认处理方式和完成时间',
     expectedDate: '',
+    nextReminderDate: '',
+    photos: [],
+    followUps: [],
     status: '待处理',
     sourceType: '手工填写',
     confirmed: true,
@@ -394,7 +403,10 @@ export function upsertIssue(state: AppState, issue: Partial<Issue> & Pick<Issue,
     owner: issue.owner,
     resolution: issue.resolution,
     expectedDate: issue.expectedDate,
+    nextReminderDate: issue.nextReminderDate ?? '',
     resolvedDate: issue.resolvedDate,
+    photos: issue.photos ?? [],
+    followUps: issue.followUps ?? [],
     status: issue.status ?? '待处理',
     sourceType: issue.sourceType ?? '手工填写',
     sourceTaskId: issue.sourceTaskId,
@@ -406,6 +418,50 @@ export function upsertIssue(state: AppState, issue: Partial<Issue> & Pick<Issue,
 
 export function deleteIssue(state: AppState, idValue: string): AppState {
   return { ...state, issues: state.issues.filter((item) => item.id !== idValue) };
+}
+
+export function addIssuePhoto(state: AppState, issueId: string, photo: { name: string; dataUrl: string }): AppState {
+  return {
+    ...state,
+    issues: state.issues.map((issue) => (
+      issue.id === issueId
+        ? {
+            ...issue,
+            photos: [
+              ...(issue.photos ?? []),
+              { id: id('photo'), name: photo.name, dataUrl: photo.dataUrl, createdAt: new Date().toISOString() },
+            ],
+          }
+        : issue
+    )),
+  };
+}
+
+export function addIssueFollowUp(state: AppState, issueId: string, content: string): AppState {
+  const text = content.trim();
+  if (!text) return state;
+
+  return {
+    ...state,
+    issues: state.issues.map((issue) => (
+      issue.id === issueId
+        ? {
+            ...issue,
+            followUps: [
+              ...(issue.followUps ?? []),
+              { id: id('followup'), content: text, createdAt: new Date().toISOString() },
+            ],
+          }
+        : issue
+    )),
+  };
+}
+
+export function updateIssueReminder(state: AppState, issueId: string, nextReminderDate: string): AppState {
+  return {
+    ...state,
+    issues: state.issues.map((issue) => (issue.id === issueId ? { ...issue, nextReminderDate } : issue)),
+  };
 }
 
 export function addExpense(state: AppState, expense: Omit<Expense, 'id' | 'sourceType' | 'confirmed'>): AppState {

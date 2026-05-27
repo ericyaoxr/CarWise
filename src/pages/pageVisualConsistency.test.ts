@@ -6,6 +6,27 @@ const pageDir = join(process.cwd(), 'src', 'pages');
 
 const pages = [
   {
+    file: 'HomePage.tsx',
+    title: null,
+    requiredCopy: ['当前最该处理', '最近时间线'],
+    forbiddenCopy: ['UploadDraftPanel'],
+  },
+  {
+    file: 'PromisePage.tsx',
+    title: '权益',
+    requiredCopy: ['权益状态', '权益清单', '快速导入权益资料'],
+  },
+  {
+    file: 'DeliveryPage.tsx',
+    title: '提车验车',
+    requiredCopy: ['交付现场', '签字前确认总表', '快速导入提车资料'],
+  },
+  {
+    file: 'HandoverPage.tsx',
+    title: '签字前确认',
+    requiredCopy: ['未完成关键项', '未落实权益', '未解决问题'],
+  },
+  {
     file: 'PurchasePage.tsx',
     title: '购车',
     requiredCopy: ['报价管家', '当前要确认', '确认文字'],
@@ -28,14 +49,19 @@ const pages = [
 ];
 
 describe('secondary pages use the accepted owner-assistant visual system', () => {
-  it.each(pages)('$file follows the advisor page structure', ({ file, title, requiredCopy }) => {
+  it.each(pages)('$file follows the advisor page structure', ({ file, title, requiredCopy, forbiddenCopy = [] }) => {
     const source = readFileSync(join(pageDir, file), 'utf8');
 
     expect(source).toContain('className="page advisor-page"');
-    expect(source).toContain('className="advisor-title"');
-    expect(source).toContain(`<h1>${title}</h1>`);
+    if (title) {
+      expect(source).toContain('className="advisor-title"');
+      expect(source).toContain(`<h1>${title}</h1>`);
+    }
     for (const copy of requiredCopy) {
       expect(source).toContain(copy);
+    }
+    for (const copy of forbiddenCopy) {
+      expect(source).not.toContain(copy);
     }
   });
 });

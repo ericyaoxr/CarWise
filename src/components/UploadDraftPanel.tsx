@@ -47,7 +47,7 @@ export function UploadDraftPanel({ title = '截图 / 文档导入后自动生成
     <div className={`upload-panel ${compact ? 'compact' : ''}`}>
       <div>
         <p className="eyebrow">{title}</p>
-        <p className="muted">点下方按钮选择截图、照片或 .md 文档；识别结果先进入待确认。</p>
+        <p className="muted">点下方按钮选择截图、照片或 .md 文档；AI识图结果先进入待确认。</p>
       </div>
       <div className="upload-actions">
         {availableItems.map((item, index) => (

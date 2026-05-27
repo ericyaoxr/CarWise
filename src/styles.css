@@ -815,6 +815,60 @@ main {
   grid-column: 2 / 4;
 }
 
+.evidence-strip {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  overflow-x: auto;
+}
+
+.evidence-strip img {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 auto;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.follow-up-list {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.follow-up-list p {
+  padding: 8px;
+  border: 1px solid rgba(227, 232, 238, 0.82);
+  border-radius: 8px;
+  background: #fbfcfd;
+  color: var(--text);
+}
+
+.follow-up-entry {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.follow-up-entry input {
+  min-width: 0;
+  border: 1px solid rgba(227, 232, 238, 0.95);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #fff;
+}
+
+.follow-up-entry button {
+  border: 1px solid rgba(74, 45, 102, 0.18);
+  border-radius: 8px;
+  padding: 0 10px;
+  background: rgba(74, 45, 102, 0.08);
+  color: var(--brand);
+}
+
 .list-item:first-child,
 .issue-row:first-child {
   border-top: 0;

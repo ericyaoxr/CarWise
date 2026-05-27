@@ -2,21 +2,17 @@ import { AlertCircle, Bell, CheckCircle2, ClipboardList, Eye, EyeOff, FileCheck2
 
 import { ActionButton } from '../components/ActionButton';
 import { StatusPill } from '../components/StatusPill';
-import { UploadDraftPanel } from '../components/UploadDraftPanel';
 import type { Page } from '../App';
 import type { AppState } from '../store/appStore';
-import type { RecognitionType } from '../model/types';
 import { deriveTimeline } from '../utils/timeline';
 
 interface HomePageProps {
   state: AppState;
   onNavigate: (page: Page) => void;
-  onUpload: (type: RecognitionType, sourceName?: string, mimeType?: string, file?: File) => void;
-  onMarkdownImport: (content: string, fileName: string) => void;
   onPrivacyModeChange: (privacyMode: boolean) => void;
 }
 
-export function HomePage({ state, onNavigate, onUpload, onMarkdownImport, onPrivacyModeChange }: HomePageProps) {
+export function HomePage({ state, onNavigate, onPrivacyModeChange }: HomePageProps) {
   const pendingDrafts = state.recognitionTasks.filter((item) => item.status === '待确认');
   const openPromises = state.promises.filter((item) => item.status === '待落实' || item.status === '有争议');
   const doneItems = state.checklistItems.filter((item) => item.done).length;
@@ -131,12 +127,6 @@ export function HomePage({ state, onNavigate, onUpload, onMarkdownImport, onPriv
         ))}
       </section>
 
-      <UploadDraftPanel
-        title="快速导入资料（可选）"
-        onUpload={onUpload}
-        onMarkdownImport={onMarkdownImport}
-        compact
-      />
     </div>
   );
 }

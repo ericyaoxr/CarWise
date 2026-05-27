@@ -25,7 +25,7 @@ const titles: Record<EditKind, string> = {
 function defaultForm(kind: EditKind): EditableRecord {
   if (kind === 'quote') return { title: '新报价', store: '', landingPrice: undefined, subsidyTotal: undefined, status: '已确认' };
   if (kind === 'promise') return { name: '新权益', type: '赠品', status: '待落实', sourceType: '手工填写', confirmed: true };
-  if (kind === 'issue') return { title: '新问题', issueType: '外观', description: '', stage: '提车当天', owner: '', expectedDate: '', status: '待处理', sourceType: '手工填写', confirmed: true };
+  if (kind === 'issue') return { title: '新问题', issueType: '外观', description: '', stage: '提车当天', owner: '', expectedDate: '', nextReminderDate: '', status: '待处理', sourceType: '手工填写', confirmed: true };
   if (kind === 'expense') return { type: '充电', date: new Date().toISOString().slice(0, 10), amount: undefined, status: '已确认', sourceType: '手工填写', confirmed: true };
   return { name: '新提醒', type: '其他', status: '未开始' };
 }
@@ -89,6 +89,7 @@ export function EditSheet({ kind, record, onClose, onSave }: EditSheetProps) {
         owner: String(data.get('owner') || ''),
         resolution: String(data.get('resolution') || ''),
         expectedDate: String(data.get('expectedDate') || ''),
+        nextReminderDate: String(data.get('nextReminderDate') || ''),
         status: data.get('status') as Issue['status'],
         stage: data.get('stage') as Issue['stage'],
         sourceType: '手工填写',
@@ -168,6 +169,7 @@ export function EditSheet({ kind, record, onClose, onSave }: EditSheetProps) {
             <label>问题描述<textarea name="description" value={String(form.description ?? '')} onChange={(e) => setField('description', e.target.value)} /></label>
             <label>责任人<input name="owner" value={String(form.owner ?? '')} onChange={(e) => setField('owner', e.target.value)} /></label>
             <label>截止时间<input name="expectedDate" type="date" value={String(form.expectedDate ?? '')} onChange={(e) => setField('expectedDate', e.target.value)} /></label>
+            <label>下次提醒<input name="nextReminderDate" type="date" value={String(form.nextReminderDate ?? '')} onChange={(e) => setField('nextReminderDate', e.target.value)} /></label>
             <label>处理方式<input name="resolution" value={String(form.resolution ?? '')} onChange={(e) => setField('resolution', e.target.value)} /></label>
             <label>阶段<select name="stage" value={String(form.stage ?? '提车当天')} onChange={(e) => setField('stage', e.target.value)}>
               {['提车前', '提车当天', '用车中'].map((item) => <option key={item}>{item}</option>)}

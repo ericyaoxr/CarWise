@@ -2,15 +2,21 @@ import { AlertCircle, Camera, CheckCircle2 } from 'lucide-react';
 
 import { ActionButton } from '../components/ActionButton';
 import { StatusPill } from '../components/StatusPill';
+import { UploadDraftPanel } from '../components/UploadDraftPanel';
+import type { Page } from '../App';
+import type { RecognitionType } from '../model/types';
 import type { AppState } from '../store/appStore';
 
 interface DeliveryPageProps {
   state: AppState;
   onToggle: (id: string) => void;
   onCreateIssue: (id: string) => void;
+  onNavigate: (page: Page) => void;
+  onUpload: (type: RecognitionType, sourceName?: string, mimeType?: string, file?: File) => void;
+  onMarkdownImport: (content: string, fileName: string) => void;
 }
 
-export function DeliveryPage({ state, onToggle, onCreateIssue }: DeliveryPageProps) {
+export function DeliveryPage({ state, onToggle, onCreateIssue, onNavigate, onUpload, onMarkdownImport }: DeliveryPageProps) {
   const done = state.checklistItems.filter((item) => item.done).length;
   const openIssues = state.issues.filter((item) => item.status !== '已解决');
   const criticalLeft = state.checklistItems.filter((item) => item.critical && !item.done).length;
@@ -72,14 +78,16 @@ export function DeliveryPage({ state, onToggle, onCreateIssue }: DeliveryPagePro
 
       <section className="handover-guard">
         <div className="section-header">
-          <h2>交付前总检查</h2>
+          <h2>签字前确认总表</h2>
         </div>
         <div className="risk-strip">
           <span>未完成关键项：{criticalLeft}</span>
           <span>未解决问题：{openIssues.length}</span>
         </div>
-        <ActionButton variant="danger" icon={<AlertCircle size={16} />}>确认清楚后再继续</ActionButton>
+        <ActionButton variant="danger" icon={<AlertCircle size={16} />} onClick={() => onNavigate('handover')}>查看总表</ActionButton>
       </section>
+
+      <UploadDraftPanel title="快速导入提车资料（可选）" onUpload={onUpload} onMarkdownImport={onMarkdownImport} compact types={['问题', '承诺']} />
     </div>
   );
 }

@@ -8,6 +8,19 @@ export type IssueStatus = '待确认' | '待处理' | '处理中' | '已解决' 
 export type ExpenseStatus = '草稿' | '已确认' | '已作废';
 export type ReminderStatus = '未开始' | '即将到期' | '已完成' | '已忽略';
 
+export interface IssuePhoto {
+  id: string;
+  name: string;
+  dataUrl: string;
+  createdAt: string;
+}
+
+export interface IssueFollowUp {
+  id: string;
+  content: string;
+  createdAt: string;
+}
+
 export interface Vehicle {
   id: string;
   name: string;
@@ -105,7 +118,10 @@ export interface Issue {
   owner?: string;
   resolution?: string;
   expectedDate?: string;
+  nextReminderDate?: string;
   resolvedDate?: string;
+  photos?: IssuePhoto[];
+  followUps?: IssueFollowUp[];
   status: IssueStatus;
   sourceType: SourceType;
   sourceTaskId?: string;

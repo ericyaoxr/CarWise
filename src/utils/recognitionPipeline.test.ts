@@ -31,6 +31,8 @@ describe('Recognition pipeline', () => {
     expect(tasks[0].sourceType).toBe('图片识别');
     expect(tasks[0].recognitionType).toBe('问题');
     expect(tasks[0].status).toBe('待确认');
+    expect(tasks[0].candidate.aiSummary).toContain('AI识图');
+    expect(tasks[0].sourceText).toContain('AI识图');
   });
 
   it('uses extracted image text before falling back to local drafts', async () => {

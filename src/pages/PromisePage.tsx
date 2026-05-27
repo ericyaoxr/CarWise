@@ -1,9 +1,10 @@
 import { AlertCircle, CheckCircle2, Eye, EyeOff, Pencil, Plus, Trash2 } from 'lucide-react';
 
 import type { AppState } from '../store/appStore';
-import type { PromiseStatus, SalesPromise } from '../model/types';
+import type { PromiseStatus, RecognitionType, SalesPromise } from '../model/types';
 import { StatusPill } from '../components/StatusPill';
 import { ActionButton } from '../components/ActionButton';
+import { UploadDraftPanel } from '../components/UploadDraftPanel';
 
 interface PromisePageProps {
   state: AppState;
@@ -11,12 +12,14 @@ interface PromisePageProps {
   onAdd: () => void;
   onEdit: (promise: SalesPromise) => void;
   onDelete: (id: string) => void;
+  onUpload: (type: RecognitionType, sourceName?: string, mimeType?: string, file?: File) => void;
+  onMarkdownImport: (content: string, fileName: string) => void;
   onPrivacyModeChange: (privacyMode: boolean) => void;
 }
 
 const statuses: PromiseStatus[] = ['未确认', '已确认', '待落实', '已落实', '有争议'];
 
-export function PromisePage({ state, onStatusChange, onAdd, onEdit, onDelete, onPrivacyModeChange }: PromisePageProps) {
+export function PromisePage({ state, onStatusChange, onAdd, onEdit, onDelete, onUpload, onMarkdownImport, onPrivacyModeChange }: PromisePageProps) {
   const openPromises = state.promises.filter((item) => item.status === '待落实' || item.status === '有争议');
   const donePromises = state.promises.filter((item) => item.status === '已落实');
   const confirmedPromises = state.promises.filter((item) => item.status === '已确认' || item.status === '已落实');
@@ -93,6 +96,8 @@ export function PromisePage({ state, onStatusChange, onAdd, onEdit, onDelete, on
         ))}
         </div>
       </section>
+
+      <UploadDraftPanel title="快速导入权益资料（可选）" onUpload={onUpload} onMarkdownImport={onMarkdownImport} compact types={['承诺']} />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { ActionButton } from '../components/ActionButton';
 import { StatusPill } from '../components/StatusPill';
 import type { Page } from '../App';
 import type { AppState } from '../store/appStore';
+import { getUpcomingAttention } from '../utils/ownerAssistant';
 import { deriveTimeline } from '../utils/timeline';
 
 interface HomePageProps {
@@ -19,7 +20,8 @@ export function HomePage({ state, onNavigate, onPrivacyModeChange }: HomePagePro
   const openIssueItems = state.issues.filter((item) => item.status !== '已解决');
   const openIssues = openIssueItems.length;
   const nextReminder = state.reminders.find((item) => item.status !== '已完成' && item.status !== '已忽略');
-  const rawNextTodo = pendingDrafts[0]?.sourceName ?? openPromises[0]?.name ?? openIssueItems[0]?.title ?? nextReminder?.name ?? '继续完善车辆档案';
+  const upcomingAttention = getUpcomingAttention(state);
+  const rawNextTodo = pendingDrafts[0]?.sourceName ?? upcomingAttention?.title ?? openPromises[0]?.name ?? openIssueItems[0]?.title ?? nextReminder?.name ?? '继续完善车辆档案';
   const nextTodo = state.privacyMode && openPromises.some((item) => item.name === rawNextTodo) ? '权益事项待确认' : rawNextTodo;
   const timeline = deriveTimeline(state).slice(0, 4);
   const checklistPercent = Math.round((doneItems / state.checklistItems.length) * 100);

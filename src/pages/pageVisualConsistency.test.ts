@@ -12,14 +12,19 @@ const pages = [
     forbiddenCopy: ['UploadDraftPanel'],
   },
   {
+    file: 'RecognitionReviewPage.tsx',
+    title: null,
+    requiredCopy: ['识别确认', '确认保存', '优先确认高风险字段'],
+  },
+  {
     file: 'PromisePage.tsx',
     title: '权益',
-    requiredCopy: ['权益状态', '权益清单', '快速导入权益资料'],
+    requiredCopy: ['权益状态', '权益清单', '快速导入权益资料', '低调确认文字', '待处理', '已完成'],
   },
   {
     file: 'DeliveryPage.tsx',
     title: '提车验车',
-    requiredCopy: ['交付现场', '签字前确认总表', '快速导入提车资料'],
+    requiredCopy: ['交付现场', '签字前确认总表', '快速导入提车资料', '未完成', '有问题'],
   },
   {
     file: 'HandoverPage.tsx',
@@ -34,7 +39,7 @@ const pages = [
   {
     file: 'IssuePage.tsx',
     title: '问题留证',
-    requiredCopy: ['问题管家', '当前要处理', '问题记录', '问题类型', '截止时间'],
+    requiredCopy: ['问题管家', '当前要处理', '问题记录', '问题类型', '截止时间', '快到期'],
   },
   {
     file: 'UsagePage.tsx',
@@ -44,7 +49,7 @@ const pages = [
   {
     file: 'ArchivePage.tsx',
     title: '车辆档案',
-    requiredCopy: ['档案管家', '车辆信息', '完整时间线'],
+    requiredCopy: ['档案管家', '车辆信息', '完整时间线', '搜索档案', '全部', '权益'],
   },
 ];
 

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Car, FileText, History, ShieldCheck } from 'lucide-react';
 
 import { Card } from '../components/Card';
@@ -5,6 +6,7 @@ import { StatusPill } from '../components/StatusPill';
 import { UploadDraftPanel } from '../components/UploadDraftPanel';
 import type { RecognitionType } from '../model/types';
 import type { AppState } from '../store/appStore';
+import { filterSourceFiles, type ArchiveFilter } from '../utils/ownerAssistant';
 import { deriveTimeline } from '../utils/timeline';
 
 interface ArchivePageProps {
@@ -13,9 +15,14 @@ interface ArchivePageProps {
   onMarkdownImport: (content: string, fileName: string) => void;
 }
 
+const archiveFilters: ArchiveFilter[] = ['全部', '权益', '问题', '费用', '车辆文件', '其他'];
+
 export function ArchivePage({ state, onUpload, onMarkdownImport }: ArchivePageProps) {
+  const [archiveFilter, setArchiveFilter] = useState<ArchiveFilter>('全部');
+  const [archiveQuery, setArchiveQuery] = useState('');
   const timeline = deriveTimeline(state);
   const displayPurpose = (purpose: string) => purpose === '承诺' ? '权益' : purpose;
+  const visibleFiles = filterSourceFiles(state.sourceFiles, archiveFilter, archiveQuery);
 
   return (
     <div className="page advisor-page">
@@ -69,9 +76,22 @@ export function ArchivePage({ state, onUpload, onMarkdownImport }: ArchivePagePr
       <section className="content-section">
         <div className="section-header">
           <h2>文件资料</h2>
-          <span>{state.sourceFiles.length} 份</span>
+          <span>{visibleFiles.length} / {state.sourceFiles.length} 份</span>
         </div>
-        {state.sourceFiles.length === 0 ? <p className="empty">还没有上传凭证。</p> : state.sourceFiles.map((file) => (
+        <input
+          className="search-input"
+          value={archiveQuery}
+          onChange={(event) => setArchiveQuery(event.currentTarget.value)}
+          placeholder="搜索档案"
+        />
+        <div className="segmented archive-filter-tabs">
+          {archiveFilters.map((filter) => (
+            <button key={filter} className={archiveFilter === filter ? 'selected' : ''} onClick={() => setArchiveFilter(filter)}>
+              {filter}
+            </button>
+          ))}
+        </div>
+        {state.sourceFiles.length === 0 ? <p className="empty">还没有上传凭证。</p> : visibleFiles.map((file) => (
           <div className="list-item" key={file.id}>
             <FileText size={18} />
             <div>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { AlertCircle, Camera, CheckCircle2 } from 'lucide-react';
 
 import { ActionButton } from '../components/ActionButton';
@@ -6,6 +7,7 @@ import { UploadDraftPanel } from '../components/UploadDraftPanel';
 import type { Page } from '../App';
 import type { RecognitionType } from '../model/types';
 import type { AppState } from '../store/appStore';
+import { filterChecklistItems, type ChecklistFilter } from '../utils/ownerAssistant';
 
 interface DeliveryPageProps {
   state: AppState;
@@ -16,10 +18,14 @@ interface DeliveryPageProps {
   onMarkdownImport: (content: string, fileName: string) => void;
 }
 
+const checklistFilters: ChecklistFilter[] = ['全部', '未完成', '有问题', '关键项'];
+
 export function DeliveryPage({ state, onToggle, onCreateIssue, onNavigate, onUpload, onMarkdownImport }: DeliveryPageProps) {
+  const [checklistFilter, setChecklistFilter] = useState<ChecklistFilter>('全部');
   const done = state.checklistItems.filter((item) => item.done).length;
   const openIssues = state.issues.filter((item) => item.status !== '已解决');
   const criticalLeft = state.checklistItems.filter((item) => item.critical && !item.done).length;
+  const visibleChecklistItems = filterChecklistItems(state.checklistItems, checklistFilter);
   const percent = Math.round((done / state.checklistItems.length) * 100);
 
   return (
@@ -47,9 +53,19 @@ export function DeliveryPage({ state, onToggle, onCreateIssue, onNavigate, onUpl
         </div>
       </section>
 
+      <div className="segmented filter-tabs">
+        {checklistFilters.map((filter) => (
+          <button key={filter} className={checklistFilter === filter ? 'selected' : ''} onClick={() => setChecklistFilter(filter)}>
+            {filter}
+          </button>
+        ))}
+      </div>
+
       {state.checklistGroups.map((group) => {
-        const items = state.checklistItems.filter((item) => item.groupId === group.id);
-        const groupDone = items.filter((item) => item.done).length;
+        const items = visibleChecklistItems.filter((item) => item.groupId === group.id);
+        const groupAllItems = state.checklistItems.filter((item) => item.groupId === group.id);
+        const groupDone = groupAllItems.filter((item) => item.done).length;
+        if (items.length === 0) return null;
         return (
           <section className="inspection-group" key={group.id}>
             <div className="inspection-group-head">
@@ -57,7 +73,7 @@ export function DeliveryPage({ state, onToggle, onCreateIssue, onNavigate, onUpl
                 <span>{String(group.order).padStart(2, '0')}</span>
                 <h2>{group.name}</h2>
               </div>
-              <StatusPill label={`完成 ${groupDone}/${items.length}`} />
+              <StatusPill label={`完成 ${groupDone}/${groupAllItems.length}`} />
             </div>
             <div className="inspection-list">
               {items.map((item) => (

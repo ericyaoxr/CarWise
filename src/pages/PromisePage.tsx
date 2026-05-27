@@ -1,10 +1,12 @@
-import { AlertCircle, CheckCircle2, Eye, EyeOff, Pencil, Plus, Trash2 } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { AlertCircle, CheckCircle2, Copy, Eye, EyeOff, Pencil, Plus, Trash2 } from 'lucide-react';
 
 import type { AppState } from '../store/appStore';
 import type { PromiseStatus, RecognitionType, SalesPromise } from '../model/types';
 import { StatusPill } from '../components/StatusPill';
 import { ActionButton } from '../components/ActionButton';
 import { UploadDraftPanel } from '../components/UploadDraftPanel';
+import { createQuietConfirmationText, filterPromises, type PromiseFilter } from '../utils/ownerAssistant';
 
 interface PromisePageProps {
   state: AppState;
@@ -18,13 +20,21 @@ interface PromisePageProps {
 }
 
 const statuses: PromiseStatus[] = ['未确认', '已确认', '待落实', '已落实', '有争议'];
+const promiseFilters: PromiseFilter[] = ['全部', '待处理', '已完成'];
 
 export function PromisePage({ state, onStatusChange, onAdd, onEdit, onDelete, onUpload, onMarkdownImport, onPrivacyModeChange }: PromisePageProps) {
+  const [promiseFilter, setPromiseFilter] = useState<PromiseFilter>('待处理');
   const openPromises = state.promises.filter((item) => item.status === '待落实' || item.status === '有争议');
   const donePromises = state.promises.filter((item) => item.status === '已落实');
   const confirmedPromises = state.promises.filter((item) => item.status === '已确认' || item.status === '已落实');
+  const visiblePromises = filterPromises(state.promises, promiseFilter);
+  const quietConfirmationText = useMemo(() => createQuietConfirmationText(openPromises, state.privacyMode), [openPromises, state.privacyMode]);
   const total = state.promises.length || 1;
   const completion = Math.round((donePromises.length / total) * 100);
+
+  function copyConfirmationText() {
+    navigator.clipboard?.writeText(quietConfirmationText);
+  }
 
   return (
     <div className="page advisor-page">
@@ -64,10 +74,17 @@ export function PromisePage({ state, onStatusChange, onAdd, onEdit, onDelete, on
       <section className="content-section no-frame">
         <div className="section-header">
           <h2>权益清单</h2>
-          <span>{state.promises.length} 项</span>
+          <span>{visiblePromises.length} / {state.promises.length} 项</span>
+        </div>
+        <div className="segmented filter-tabs">
+          {promiseFilters.map((filter) => (
+            <button key={filter} className={promiseFilter === filter ? 'selected' : ''} onClick={() => setPromiseFilter(filter)}>
+              {filter}
+            </button>
+          ))}
         </div>
         <div className="equity-list">
-        {state.promises.map((item, index) => (
+        {visiblePromises.map((item, index) => (
           <article className={`equity-card ${item.status === '已落实' ? 'is-complete' : ''}`} key={item.id}>
             <div className="equity-main">
               <span>{item.type}</span>
@@ -95,6 +112,16 @@ export function PromisePage({ state, onStatusChange, onAdd, onEdit, onDelete, on
           </article>
         ))}
         </div>
+      </section>
+
+      <section className="content-section">
+        <div className="section-header">
+          <h2>低调确认文字</h2>
+          <button className="text-link-button" type="button" onClick={copyConfirmationText}>
+            <Copy size={14} />复制
+          </button>
+        </div>
+        <pre className="confirm-text">{quietConfirmationText}</pre>
       </section>
 
       <UploadDraftPanel title="快速导入权益资料（可选）" onUpload={onUpload} onMarkdownImport={onMarkdownImport} compact types={['承诺']} />

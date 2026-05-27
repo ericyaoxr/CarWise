@@ -6,6 +6,7 @@ import { StatusPill } from '../components/StatusPill';
 import { UploadDraftPanel } from '../components/UploadDraftPanel';
 import type { Issue, RecognitionType } from '../model/types';
 import type { AppState } from '../store/appStore';
+import { filterIssues, type IssueFilter } from '../utils/ownerAssistant';
 
 interface IssuePageProps {
   state: AppState;
@@ -24,15 +25,19 @@ function formatDeadline(issue?: Issue) {
   return `截止 ${issue.expectedDate}`;
 }
 
+const issueFilters: IssueFilter[] = ['全部', '未解决', '快到期', '已解决'];
+
 export function IssuePage({ state, onUpload, onMarkdownImport, onResolve, onAdd, onEdit, onDelete, onAddPhoto, onAddFollowUp }: IssuePageProps) {
   const photoInputRef = useRef<HTMLInputElement>(null);
   const [photoIssueId, setPhotoIssueId] = useState<string | null>(null);
   const [followUpDrafts, setFollowUpDrafts] = useState<Record<string, string>>({});
+  const [issueFilter, setIssueFilter] = useState<IssueFilter>('未解决');
   const openIssues = state.issues
     .filter((issue) => issue.status !== '已解决')
     .sort((left, right) => String(left.expectedDate || '9999-12-31').localeCompare(String(right.expectedDate || '9999-12-31')));
   const resolvedIssues = state.issues.filter((issue) => issue.status === '已解决');
   const currentIssue = openIssues[0];
+  const visibleIssues = filterIssues(state.issues, issueFilter);
 
   function choosePhoto(issueId: string) {
     setPhotoIssueId(issueId);
@@ -96,12 +101,19 @@ export function IssuePage({ state, onUpload, onMarkdownImport, onResolve, onAdd,
       <section className="content-section">
         <div className="section-header">
           <h2>问题记录</h2>
-          <span>{state.issues.length} 条</span>
+          <span>{visibleIssues.length} / {state.issues.length} 条</span>
+        </div>
+        <div className="segmented filter-tabs">
+          {issueFilters.map((filter) => (
+            <button key={filter} className={issueFilter === filter ? 'selected' : ''} onClick={() => setIssueFilter(filter)}>
+              {filter}
+            </button>
+          ))}
         </div>
         {state.issues.length === 0 ? (
           <p className="empty">还没有问题记录。验车页点击相机图标，或这里拍照生成问题草稿；每条问题都可以补照片附件、跟进记录和下次提醒。</p>
         ) : (
-          state.issues.map((issue) => (
+          visibleIssues.map((issue) => (
             <div className="issue-row" key={issue.id}>
               <Camera size={18} />
               <div>

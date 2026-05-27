@@ -14,8 +14,9 @@ interface RecognitionReviewPageProps {
   onUpdateCandidate: (id: string, candidate: RecognitionTask['candidate']) => void;
 }
 
-const hiddenKeys = new Set(['id', 'sourceTaskId', 'confirmed']);
+const hiddenKeys = new Set(['id', 'sourceTaskId', 'confirmed', 'aiSummary']);
 const numberKeys = new Set(['value', 'officialPrice', 'discountAmount', 'insuranceFee', 'purchaseTax', 'plateFee', 'subsidyTotal', 'landingPrice', 'amount', 'mileage']);
+const riskyKeys = new Set(['value', 'officialPrice', 'discountAmount', 'insuranceFee', 'subsidyTotal', 'landingPrice', 'amount', 'status', 'owner', 'expectedDate', 'nextReminderDate', 'dueDate']);
 
 function labelFor(key: string) {
   const labels: Record<string, string> = {
@@ -40,6 +41,7 @@ function labelFor(key: string) {
     owner: '负责人',
     resolution: '处理方式',
     expectedDate: '预计时间',
+    nextReminderDate: '下次提醒',
     dueDate: '到期日期',
     dueMileage: '到期里程',
     note: '备注',
@@ -77,7 +79,7 @@ function EditableCandidate({
           <div className="candidate-row" key={index}>
             <strong>权益 {index + 1}</strong>
             {keys.filter((key) => key in item).map((key) => (
-              <label key={key}>
+              <label key={key} className={riskyKeys.has(key) ? 'needs-review' : ''}>
                 <span>{labelFor(key)}</span>
                 <input
                   value={String(item[key] ?? '')}
@@ -100,7 +102,7 @@ function EditableCandidate({
   return (
     <div className="candidate-editor">
       {Object.entries(candidate).filter(([key]) => !hiddenKeys.has(key)).map(([key, value]) => (
-        <label key={key}>
+        <label key={key} className={riskyKeys.has(key) ? 'needs-review' : ''}>
           <span>{labelFor(key)}</span>
           <input
             value={String(value ?? '')}
@@ -120,10 +122,10 @@ export function RecognitionReviewPage({ state, onConfirm, onIgnore, onNavigate, 
   const pending = state.recognitionTasks.filter((item) => item.status === '待确认');
 
   return (
-    <div className="page">
-      <header className="page-title">
+    <div className="page advisor-page">
+      <header className="advisor-title">
         <h1>识别确认</h1>
-        <p>自动识别的内容不会直接入库，确认后才保存。</p>
+        <p>自动识别的内容不会直接入库，确认后才保存。优先确认高风险字段：金额、日期、状态、责任人。</p>
       </header>
 
       {pending.length > 0 && (

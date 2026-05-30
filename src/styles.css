@@ -1602,3 +1602,373 @@ main {
   color: var(--muted);
   font-size: 14px;
 }
+
+/* Vehicle Info Editor Styles */
+.vehicle-info-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.vehicle-info-grid .info-item {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.vehicle-info-grid .info-item label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.vehicle-info-grid .info-item span {
+  display: block;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tire-dot-list,
+.tire-date-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.tire-dot,
+.tire-date {
+  padding: 2px 8px;
+  background: var(--brand-soft);
+  color: var(--brand);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pending-tasks-panel {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--brand-line);
+  border-radius: 8px;
+  background: #fffbfd;
+}
+
+.pending-tasks-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: var(--brand);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pending-task-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.pending-task-item:last-child {
+  margin-bottom: 0;
+}
+
+.pending-task-item strong {
+  display: block;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pending-task-item p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.task-actions {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.apply-task-btn,
+.view-task-btn {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid rgba(227, 232, 238, 0.9);
+  border-radius: 7px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #485564;
+  font-size: 12px;
+}
+
+.apply-task-btn {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.vehicle-edit-form {
+  display: grid;
+  gap: 12px;
+}
+
+.vehicle-edit-form .form-field {
+  display: grid;
+  gap: 5px;
+}
+
+.vehicle-edit-form .form-field label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.vehicle-edit-form .form-field input {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid #cfd6dd;
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.save-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--brand);
+  padding: 8px 14px;
+  color: #fff;
+  background: var(--brand);
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 5px 12px rgba(59, 36, 95, 0.16);
+}
+
+/* AI Config Modal Styles */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  background: rgba(29, 37, 44, 0.42);
+  padding: 18px 10px;
+}
+
+.modal-content {
+  width: min(100%, 410px);
+  max-height: min(86vh, 760px);
+  overflow: auto;
+  display: grid;
+  gap: 0;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 40px rgba(29, 37, 44, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.modal-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-header-title svg {
+  color: var(--brand);
+}
+
+.modal-header-title h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.modal-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+}
+
+.modal-body {
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.modal-intro {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--brand-line);
+  border-radius: 8px;
+  background: var(--brand-soft);
+}
+
+.modal-intro strong {
+  color: var(--brand);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.modal-intro p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.modal-form {
+  display: grid;
+  gap: 10px;
+}
+
+.modal-form-field {
+  display: grid;
+  gap: 5px;
+}
+
+.modal-form-field label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.modal-form-field select,
+.modal-form-field input {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+}
+
+.modal-form-field select:focus,
+.modal-form-field input:focus {
+  outline: 2px solid var(--brand-line);
+  border-color: var(--brand);
+}
+
+.advanced-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.advanced-options {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-left: 2px solid var(--line);
+  margin-left: 4px;
+  padding-left: 14px;
+}
+
+.modal-warning {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--warning-line);
+  border-radius: 8px;
+  background: var(--warning-soft);
+}
+
+.modal-warning p {
+  margin: 0;
+  color: var(--warning);
+  font-size: 11px;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.modal-cancel-btn {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+  font-weight: 600;
+}
+
+.modal-save-btn {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--brand);
+  padding: 8px 14px;
+  color: #fff;
+  background: var(--brand);
+  font: inherit;
+  font-weight: 700;
+  box-shadow: 0 5px 12px rgba(59, 36, 95, 0.16);
+}
+
+.modal-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

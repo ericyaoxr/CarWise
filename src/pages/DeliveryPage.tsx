@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { AlertCircle, Camera, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, Camera, CheckCircle2, ExternalLink, ShieldCheck } from 'lucide-react';
 
 import { ActionButton } from '../components/ActionButton';
 import { StatusPill } from '../components/StatusPill';
 import { UploadDraftPanel } from '../components/UploadDraftPanel';
+import { inspectionInsights } from '../data/inspectionInsights';
 import type { Page } from '../App';
 import type { RecognitionType } from '../model/types';
 import type { AppState } from '../store/appStore';
@@ -33,7 +34,7 @@ export function DeliveryPage({ state, onToggle, onCreateIssue, onNavigate, onUpl
       <header className="advisor-title">
         <span className="section-kicker">交付现场</span>
         <h1>提车验车</h1>
-        <p>按步骤确认，发现问题先留证，交付前只看未完成项。</p>
+        <p>按步骤确认，车友经验专项检查已固化进清单；发现问题先留证，交付前只看未完成项。</p>
       </header>
 
       <section className="inspection-dashboard">
@@ -50,6 +51,31 @@ export function DeliveryPage({ state, onToggle, onCreateIssue, onNavigate, onUpl
         <div className="risk-strip">
           <span>{criticalLeft} 个关键项未完成</span>
           <span>{openIssues.length} 个问题未解决</span>
+        </div>
+      </section>
+
+      <section className="web-insight-panel">
+        <div className="section-header">
+          <h2>网上经验重点</h2>
+          <span>{inspectionInsights.length} 条已固化</span>
+        </div>
+        <div className="web-insight-list">
+          {inspectionInsights.map((insight) => (
+            <article className="web-insight-card" key={insight.id}>
+              <div className="web-insight-icon">
+                <ShieldCheck size={18} />
+              </div>
+              <div>
+                <strong>{insight.title}</strong>
+                <p>{insight.detail}</p>
+                <p className="insight-action">{insight.action}</p>
+                <a href={insight.sourceUrl} target="_blank" rel="noreferrer">
+                  {insight.source}
+                  <ExternalLink size={12} />
+                </a>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 

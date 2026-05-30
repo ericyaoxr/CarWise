@@ -24,7 +24,7 @@ const pages = [
   {
     file: 'DeliveryPage.tsx',
     title: '提车验车',
-    requiredCopy: ['交付现场', '签字前确认总表', '快速导入提车资料', '未完成', '有问题'],
+    requiredCopy: ['交付现场', '网上经验重点', '车友经验专项检查', '签字前确认总表', '快速导入提车资料', '未完成', '有问题'],
   },
   {
     file: 'HandoverPage.tsx',

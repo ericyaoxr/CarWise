@@ -32,6 +32,9 @@ export interface Vehicle {
   productionDate?: string;
   deliveryDate?: string;
   status: VehicleStatus;
+  tireDotCodes?: string[];
+  tireProductionDates?: string[];
+  tireReplacementDate?: string;
 }
 
 export interface SourceFile {

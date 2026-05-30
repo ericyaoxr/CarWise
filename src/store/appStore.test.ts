@@ -45,7 +45,8 @@ describe('CarWise app state', () => {
     expect(state.vehicle.status).toBe('待提车');
     expect(state.promises.some((item) => item.name.includes('太阳膜'))).toBe(true);
     expect(state.reminders.some((item) => item.name.includes('首保'))).toBe(true);
-    expect(state.checklistGroups).toHaveLength(10);
+    expect(state.checklistGroups).toHaveLength(11);
+    expect(state.checklistGroups.some((item) => item.name === '车友经验专项检查')).toBe(true);
     expect(state.checklistItems.length).toBeGreaterThan(100);
     expect(state.privacyMode).toBe(true);
   });

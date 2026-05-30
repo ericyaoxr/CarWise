@@ -37,6 +37,82 @@
   --shadow-card: 0 2px 8px rgba(24, 31, 42, 0.04);
 }
 
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f7fafc;
+    background: #1a202c;
+    --bg: #1a202c;
+    --bg-elevated: #171923;
+    --surface: #2d3748;
+    --surface-soft: #252d3d;
+    --surface-raised: #3a4556;
+    --text: #f7fafc;
+    --muted: #a0aec0;
+    --muted-2: #718096;
+    --line: #4a5568;
+    --line-strong: #2d3748;
+    --brand: #a855f7;
+    --brand-strong: #7c3aed;
+    --brand-soft: #2d1b4e;
+    --brand-line: #553c9a;
+    --accent: #14b8a6;
+    --accent-soft: #0f3d3a;
+    --accent-line: #134e4a;
+    --info: #3b82f6;
+    --info-soft: #1e3a5f;
+    --success: #10b981;
+    --success-soft: #064e3b;
+    --success-line: #065f46;
+    --warning: #f59e0b;
+    --warning-soft: #451a03;
+    --warning-line: #78350f;
+    --danger: #ef4444;
+    --danger-soft: #450a0a;
+    --danger-line: #7f1d1d;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-lift: 0 4px 14px rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Manual dark mode toggle support */
+.dark-mode {
+  color: #f7fafc;
+  background: #1a202c;
+  --bg: #1a202c;
+  --bg-elevated: #171923;
+  --surface: #2d3748;
+  --surface-soft: #252d3d;
+  --surface-raised: #3a4556;
+  --text: #f7fafc;
+  --muted: #a0aec0;
+  --muted-2: #718096;
+  --line: #4a5568;
+  --line-strong: #2d3748;
+  --brand: #a855f7;
+  --brand-strong: #7c3aed;
+  --brand-soft: #2d1b4e;
+  --brand-line: #553c9a;
+  --accent: #14b8a6;
+  --accent-soft: #0f3d3a;
+  --accent-line: #134e4a;
+  --info: #3b82f6;
+  --info-soft: #1e3a5f;
+  --success: #10b981;
+  --success-soft: #064e3b;
+  --success-line: #065f46;
+  --warning: #f59e0b;
+  --warning-soft: #451a03;
+  --warning-line: #78350f;
+  --danger: #ef4444;
+  --danger-soft: #450a0a;
+  --danger-line: #7f1d1d;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-lift: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -286,6 +362,7 @@ main {
 .priority-panel,
 .equity-overview,
 .inspection-dashboard,
+.web-insight-panel,
 .handover-guard {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -577,6 +654,64 @@ main {
   gap: 12px;
   padding: 15px;
   border-color: var(--accent-line);
+}
+
+.web-insight-panel {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-color: var(--brand-line);
+}
+
+.web-insight-list {
+  display: grid;
+  gap: 8px;
+}
+
+.web-insight-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.web-insight-icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.web-insight-card strong {
+  display: block;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.web-insight-card p,
+.web-insight-card a {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.web-insight-card .insight-action {
+  color: var(--brand);
+  font-weight: 700;
+}
+
+.web-insight-card a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
 }
 
 .inspection-progress span,
@@ -1376,4 +1511,94 @@ main {
   .bottom-nav {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+/* Error Boundary Styles */
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--bg);
+}
+
+.error-boundary-content {
+  max-width: 400px;
+  padding: 30px;
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.error-boundary-content h2 {
+  margin-bottom: 16px;
+  color: var(--text);
+  font-size: 24px;
+}
+
+.error-boundary-content p {
+  margin-bottom: 24px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.error-boundary-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.error-details {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.error-details summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.error-details pre {
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--surface-soft);
+  border-radius: 8px;
+  font-size: 11px;
+  overflow-x: auto;
+  color: var(--danger);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--line);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 16px;
+}
+
+.loading-container p {
+  color: var(--muted);
+  font-size: 14px;
 }

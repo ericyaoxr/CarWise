@@ -1,9 +1,12 @@
-import { AlertCircle, Bell, CheckCircle2, ClipboardList, Eye, EyeOff, FileCheck2, ShieldCheck, Upload } from 'lucide-react';
+import { AlertCircle, Bell, CheckCircle2, ClipboardList, Eye, EyeOff, FileCheck2, ShieldCheck, Upload, Sparkles } from 'lucide-react';
 
 import { ActionButton } from '../components/ActionButton';
 import { StatusPill } from '../components/StatusPill';
+import { DataExportImport } from '../components/DataExportImport';
+import { VehicleInfoEditor } from '../components/VehicleInfoEditor';
 import type { Page } from '../App';
 import type { AppState } from '../store/appStore';
+import type { Vehicle } from '../model/types';
 import { getUpcomingAttention } from '../utils/ownerAssistant';
 import { deriveTimeline } from '../utils/timeline';
 
@@ -11,9 +14,11 @@ interface HomePageProps {
   state: AppState;
   onNavigate: (page: Page) => void;
   onPrivacyModeChange: (privacyMode: boolean) => void;
+  onOpenAiConfig: () => void;
+  onUpdateVehicle: (updates: Partial<Vehicle>) => void;
 }
 
-export function HomePage({ state, onNavigate, onPrivacyModeChange }: HomePageProps) {
+export function HomePage({ state, onNavigate, onPrivacyModeChange, onOpenAiConfig, onUpdateVehicle }: HomePageProps) {
   const pendingDrafts = state.recognitionTasks.filter((item) => item.status === '待确认');
   const openPromises = state.promises.filter((item) => item.status === '待落实' || item.status === '有争议');
   const doneItems = state.checklistItems.filter((item) => item.done).length;
@@ -52,10 +57,16 @@ export function HomePage({ state, onNavigate, onPrivacyModeChange }: HomePagePro
         </div>
       </header>
 
-      <button className="privacy-toggle privacy-toggle-quiet" type="button" onClick={() => onPrivacyModeChange(!state.privacyMode)}>
-        {state.privacyMode ? <EyeOff size={16} /> : <Eye size={16} />}
-        <span>{state.privacyMode ? '低调模式开启' : '低调模式关闭'}</span>
-      </button>
+      <div className="flex gap-2 justify-end">
+        <button className="privacy-toggle privacy-toggle-quiet" type="button" onClick={onOpenAiConfig}>
+          <Sparkles size={16} />
+          <span>AI 设置</span>
+        </button>
+        <button className="privacy-toggle privacy-toggle-quiet" type="button" onClick={() => onPrivacyModeChange(!state.privacyMode)}>
+          {state.privacyMode ? <EyeOff size={16} /> : <Eye size={16} />}
+          <span>{state.privacyMode ? '低调模式开启' : '低调模式关闭'}</span>
+        </button>
+      </div>
 
       <section className="priority-panel">
         <div className="section-kicker">当前最该处理</div>
@@ -127,6 +138,20 @@ export function HomePage({ state, onNavigate, onPrivacyModeChange }: HomePagePro
             </div>
           </div>
         ))}
+      </section>
+
+      <VehicleInfoEditor
+        vehicle={state.vehicle}
+        recognitionTasks={state.recognitionTasks}
+        onUpdateVehicle={onUpdateVehicle}
+        onNavigateToRecognition={() => onNavigate('recognition')}
+      />
+
+      <section className="content-section">
+        <div className="section-header">
+          <h2>数据管理</h2>
+        </div>
+        <DataExportImport />
       </section>
 
     </div>

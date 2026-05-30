@@ -13,6 +13,7 @@ const tabs: Array<{ page: Page; label: string; icon: typeof Home }> = [
   { page: 'delivery', label: '提车', icon: ClipboardCheck },
   { page: 'usage', label: '用车', icon: ReceiptText },
   { page: 'archive', label: '档案', icon: FileArchive },
+  { page: 'promises', label: '权益', icon: Car },
 ];
 
 export function BottomNav({ current, onNavigate }: BottomNavProps) {
@@ -27,10 +28,6 @@ export function BottomNav({ current, onNavigate }: BottomNavProps) {
           </button>
         );
       })}
-      <button className={current === 'promises' ? 'active' : ''} onClick={() => onNavigate('promises')}>
-        <Car size={18} />
-        <span>权益</span>
-      </button>
     </nav>
   );
 }

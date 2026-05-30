@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { AppState } from '../store/appStore';
+import { inspectionInsights } from '../data/inspectionInsights';
 import { createInitialState, createIssueFromChecklist, updatePromiseStatus } from '../store/appStore';
 import {
   createQuietConfirmationText,
@@ -52,5 +53,18 @@ describe('owner assistant helpers', () => {
       type: '问题',
       title: withIssue.issues[0].title,
     });
+  });
+
+  it('keeps online inspection experience as actionable checklist and source cards', () => {
+    const state = createInitialState();
+    const ownerExperienceGroup = state.checklistGroups.find((group) => group.id === 'owner-experience');
+    const ownerExperienceItems = state.checklistItems.filter((item) => item.groupId === 'owner-experience');
+
+    expect(ownerExperienceGroup?.name).toBe('车友经验专项检查');
+    expect(ownerExperienceItems.length).toBeGreaterThanOrEqual(10);
+    expect(ownerExperienceItems.some((item) => item.text.includes('360'))).toBe(true);
+    expect(ownerExperienceItems.some((item) => item.text.includes('App'))).toBe(true);
+    expect(inspectionInsights).toHaveLength(5);
+    expect(inspectionInsights.every((item) => item.sourceUrl.startsWith('https://'))).toBe(true);
   });
 });

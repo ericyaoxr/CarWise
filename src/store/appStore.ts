@@ -73,14 +73,10 @@ function issueTypeForGroup(groupId: string): IssueType {
 
 function normalizePromiseStatus(status: unknown): PromiseStatus {
   const value = String(status ?? '');
-  const statusMap: Record<string, PromiseStatus> = {
-    '寰呯‘璁?': '未确认',
-    '宸茬‘璁?': '已确认',
-    '寰呰惤瀹?': '待落实',
-    '宸茶惤瀹?': '已落实',
-    '鏈変簤璁?': '有争议',
-  };
-  return statusMap[value] ?? (['未确认', '已确认', '待落实', '已落实', '有争议'].includes(value) ? value as PromiseStatus : '待落实');
+  const validStatuses: PromiseStatus[] = ['未确认', '已确认', '待落实', '已落实', '有争议'];
+  return validStatuses.includes(value as PromiseStatus) 
+    ? value as PromiseStatus 
+    : '待落实';
 }
 
 function normalizeState(parsed: Partial<AppState>): AppState {

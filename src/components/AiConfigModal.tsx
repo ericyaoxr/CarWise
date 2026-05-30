@@ -30,6 +30,11 @@ const PROVIDER_PRESETS: Record<string, ProviderPreset> = {
     baseUrl: 'https://api.anthropic.com/v1',
     models: ['claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku']
   },
+  alibaba: {
+    name: '阿里云',
+    baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    models: ['qwen-turbo', 'qwen-plus', 'qwen-max', 'qwen-long']
+  },
   custom: {
     name: '自定义',
     baseUrl: '',
@@ -122,6 +127,7 @@ export function AiConfigModal({ isOpen, onClose }: AiConfigModalProps): React.Re
                 <option value="openai">OpenAI</option>
                 <option value="deepseek">DeepSeek</option>
                 <option value="anthropic">Anthropic</option>
+                <option value="alibaba">阿里云</option>
                 <option value="custom">自定义</option>
               </select>
             </div>

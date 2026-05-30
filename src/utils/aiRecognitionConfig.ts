@@ -4,7 +4,7 @@ export interface AiRecognitionConfig {
   model?: string;
   maxTokens?: number;
   temperature?: number;
-  provider?: 'openai' | 'anthropic' | 'deepseek' | 'custom';
+  provider?: 'openai' | 'anthropic' | 'deepseek' | 'alibaba' | 'custom';
 }
 
 export interface ImageAnalysisResult {

@@ -24,6 +24,8 @@ import {
   deletePromise,
   upsertIssue,
   deleteIssue,
+  upsertLandingCostItem,
+  deleteLandingCostItem,
 } from './appStore';
 
 interface AppStateActions {
@@ -48,6 +50,8 @@ interface AppStateActions {
   upsertIssue: (issue: unknown) => void;
   deleteIssue: (id: string) => void;
   updateVehicle: (updates: Partial<AppState['vehicle']>) => void;
+  upsertLandingCostItem: (item: unknown) => void;
+  deleteLandingCostItem: (id: string) => void;
   exportData: () => string;
   importData: (data: string) => void;
 }
@@ -147,6 +151,14 @@ export const useAppStore = create<AppStore>()(
             ...updates,
           },
         }));
+      },
+
+      upsertLandingCostItem: (item) => {
+        set((state) => upsertLandingCostItem(state, item as any));
+      },
+
+      deleteLandingCostItem: (id) => {
+        set((state) => deleteLandingCostItem(state, id));
       },
 
       exportData: () => {

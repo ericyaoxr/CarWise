@@ -1,4 +1,4 @@
-import { Car, ClipboardCheck, FileArchive, Home, ReceiptText, ShoppingCart } from 'lucide-react';
+import { Car, ClipboardCheck, FileArchive, Home, ReceiptText, ShoppingCart, DollarSign } from 'lucide-react';
 
 import type { Page } from '../App';
 
@@ -11,6 +11,7 @@ const tabs: Array<{ page: Page; label: string; icon: typeof Home }> = [
   { page: 'home', label: '首页', icon: Home },
   { page: 'purchase', label: '购车', icon: ShoppingCart },
   { page: 'delivery', label: '提车', icon: ClipboardCheck },
+  { page: 'landingcost', label: '落地价', icon: DollarSign },
   { page: 'usage', label: '用车', icon: ReceiptText },
   { page: 'archive', label: '档案', icon: FileArchive },
   { page: 'promises', label: '权益', icon: Car },

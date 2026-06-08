@@ -7,6 +7,7 @@ import type {
   Issue,
   IssueStatus,
   IssueType,
+  LandingCostItem,
   PromiseStatus,
   Quote,
   RecognitionTask,
@@ -29,6 +30,7 @@ export interface AppState {
   reminders: Reminder[];
   recognitionTasks: RecognitionTask[];
   sourceFiles: SourceFile[];
+  landingCostItems: LandingCostItem[];
 }
 
 const STORAGE_KEY = 'carwise:mvp:v1';
@@ -53,6 +55,7 @@ export function createInitialState(): AppState {
     reminders: defaultReminders.map((item) => ({ ...item })),
     recognitionTasks: [],
     sourceFiles: [],
+    landingCostItems: [],
   };
 }
 
@@ -119,6 +122,7 @@ function normalizeState(parsed: Partial<AppState>): AppState {
       followUps: item.followUps ?? [],
     })),
     expenses: parsed.expenses ?? initial.expenses,
+    landingCostItems: parsed.landingCostItems ?? initial.landingCostItems,
   };
 }
 
@@ -512,4 +516,49 @@ export function upsertReminder(state: AppState, reminder: Partial<Reminder> & Pi
 
 export function deleteReminder(state: AppState, idValue: string): AppState {
   return { ...state, reminders: state.reminders.filter((item) => item.id !== idValue) };
+}
+
+export function upsertLandingCostItem(state: AppState, item: Partial<LandingCostItem> & Pick<LandingCostItem, 'category' | 'name' | 'amount'>): AppState {
+  const next: LandingCostItem = {
+    id: item.id ?? id('landingcost'),
+    category: item.category,
+    name: item.name,
+    amount: item.amount,
+    date: item.date,
+    vendor: item.vendor,
+    description: item.description,
+    photoDataUrl: item.photoDataUrl,
+    sourceType: item.sourceType ?? '手工填写',
+    sourceTaskId: item.sourceTaskId,
+    confirmed: item.confirmed ?? true,
+    createdAt: item.createdAt ?? new Date().toISOString(),
+  };
+  const exists = state.landingCostItems.some((existingItem) => existingItem.id === next.id);
+  return { 
+    ...state, 
+    landingCostItems: exists 
+      ? state.landingCostItems.map((existingItem) => (existingItem.id === next.id ? next : existingItem))
+      : [next, ...state.landingCostItems]
+  };
+}
+
+export function deleteLandingCostItem(state: AppState, idValue: string): AppState {
+  return { ...state, landingCostItems: state.landingCostItems.filter((item) => item.id !== idValue) };
+}
+
+export function getLandingCostSummary(state: AppState): {
+  total: number;
+  byCategory: Map<string, number>;
+  itemCount: number;
+} {
+  const byCategory = new Map<string, number>();
+  let total = 0;
+  
+  state.landingCostItems.forEach((item) => {
+    const current = byCategory.get(item.category) ?? 0;
+    byCategory.set(item.category, current + item.amount);
+    total += item.amount;
+  });
+  
+  return { total, byCategory, itemCount: state.landingCostItems.length };
 }

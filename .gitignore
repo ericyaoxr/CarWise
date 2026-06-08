@@ -31,3 +31,6 @@ dist-ssr
 .edge-profile
 .edge-profile2
 .visual-check
+
+# Temporary files
+*.tmp

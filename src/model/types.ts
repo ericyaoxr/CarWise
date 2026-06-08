@@ -155,6 +155,30 @@ export interface Reminder {
   note?: string;
 }
 
+export interface LandingCostItem {
+  id: string;
+  category: '裸车价' | '购置税' | '保险费' | '上牌费' | '服务费' | '装潢费' | '其他费用';
+  name: string;
+  amount: number;
+  date?: string;
+  vendor?: string;
+  description?: string;
+  photoDataUrl?: string;
+  sourceType: SourceType;
+  sourceTaskId?: string;
+  confirmed: boolean;
+  createdAt: string;
+}
+
+export interface LandingCostSummary {
+  totalAmount: number;
+  officialPrice?: number;
+  actualLandingPrice: number;
+  discountAmount: number;
+  itemCount: number;
+  lastUpdatedAt: string;
+}
+
 export interface TimelineEvent {
   id: string;
   title: string;
